@@ -1,4 +1,6 @@
 import { Loader } from "../Loader/Loader";
+import { SearchBar } from "components/SearchBar/Searchbar";
+import { Button } from "../Button/Button";
 
 const { Component } = require("react");
 
@@ -46,19 +48,17 @@ Your API key: 38422328-85a02d361c587760bb979b0d3;
     return (
     
       <div>React homework template
-        
-      <form onSubmit={this.handleSubmit}>
-        <input type="text" />
-        <button type="submit">Search</button>
-      </form>
-      {this.state.images.length > 0 && <div>Gallery</div>}
-      <button onClick={this.handleLoadMore}>Load more</button>
+        <SearchBar onSubmit={this.handleSubmit}/>  
+        {this.state.images.length > 0 && <div>Gallery</div>}
+        <Button onClick={this.handleLoadMore}/>
     </div>
   );
 }
 };
 
 /*<Loader>{Audio}</Loader>*/
+
+/*<button onClick={this.handleLoadMore}>Load more</button>*/
 
 /*Scroll:
 const height = Math.max(

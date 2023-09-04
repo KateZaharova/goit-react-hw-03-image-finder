@@ -1,21 +1,22 @@
-import { } from "./SearchBar.styled";
+import {Searchbar, SearchForm, SearchFormBtn, SearchFormInput, SpanBtn} from "./SearchBar.styled";
+import { AiOutlineSearch } from "react-icons/ai";
 
-export const SearchBar = () => {
+export const SearchBar = ({onSubmit}) => {
     return (
-        <header class="searchbar">
-  <form class="form">
-    <button type="submit" class="button">
-      <span class="button-label">Search</span>
-    </button>
+        <Searchbar className="searchbar">
+  <SearchForm className="form">
+    <SearchFormBtn type="submit" className="button" onSubmit>
+      <SpanBtn className="button-label"><AiOutlineSearch/></SpanBtn>
+    </SearchFormBtn>
 
-    <input
-      class="input"
+    <SearchFormInput
+      className="input"
       type="text"
-      autocomplete="off"
-      autofocus
+      autoComplete="off"
+      autoFocus
       placeholder="Search images and photos"
-    />
-  </form>
-</header>
+          />
+        </SearchForm>
+</Searchbar>
     )
 }
