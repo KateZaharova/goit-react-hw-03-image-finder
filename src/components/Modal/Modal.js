@@ -1,16 +1,16 @@
-import { } from "./Modal.styled";
+import { Overlay, ModalWrapper } from "./Modal.styled";
 import React from 'react';
-import ReactDOM from 'react-dom';
-import Modal from 'react-modal';
+//import ReactDOM from 'react-dom';
+//import Modal from 'react-modal';
 
 
 
-export const Modal = () => {
+export const Modal = ({largeImageURL, onClickBigImage, onKeyPress}) => {
   return (
-    <div class="overlay">
-  <div class="modal">
-    <img src="" alt="" />
-  </div>
-</div>
+    <Overlay className="overlay" onClick={(evt)=>{onClickBigImage(evt)}} onKeyDown={(evt)=>{onKeyPress(evt)}}>
+  <ModalWrapper className="modal">
+    <img src={largeImageURL} alt='' />
+  </ModalWrapper>
+</Overlay>
   )
 }

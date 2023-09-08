@@ -1,11 +1,17 @@
-import { } from "./ImageGallery.styled"
+import {ImageGalleryList, ImageGalleryItemLi} from "./ImageGallery.styled";
+import {ImageGalleryItem} from "../ImageGalleryItem/ImageGalleryItem";
 
-export const ImageGallery = () => {
+export const ImageGallery = ({images, onClick}) => {
     return (
         <>
-        <ul class="gallery">
-            <li> Набір <li></li> із зображеннями</li>
-        </ul>
+        <ImageGalleryList className="gallery">
+                {images.map(item => (
+                 <ImageGalleryItemLi key={item.id}>
+                     <ImageGalleryItem item={item} onClick={onClick} />   
+                 </ImageGalleryItemLi>
+                
+                ))}
+        </ImageGalleryList>
         </>
         
     )

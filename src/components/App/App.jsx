@@ -1,23 +1,28 @@
 import { Loader } from "../Loader/Loader";
 import { SearchBar } from "components/SearchBar/Searchbar";
 import { Button } from "../Button/Button";
+import { searchImg } from "../api";
+import { ImageGallery } from "components/ImageGallery/ImageGallery";
+import { Modal } from "../Modal/Modal";
 
 const { Component } = require("react");
 
-
+//query переименовала на request
 
 export class App extends Component {
   state = {
-    query: '',
+    request: '',
+    loading: false,
     images: [],
     page: 1,
+    currentBigImage:'',
   };
 
   handleSubmit = evt => {
+    console.log(evt)
     evt.preventDefault();
-
     this.setState({
-      query: evt.target.elements.query.value,
+      request: evt.target.elements.request.value,
       images: [],
       page:1
     });
@@ -26,39 +31,72 @@ export class App extends Component {
   
   handleLoadMore = () => {
     this.setState(prevState => ({
-      page: prevState + 1,
+      page: prevState.page + 1,
     }));
    };
 
   
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.query !== this.state.query ||
+  showImage = (largeImageURL) => {
+    this.setState({ currentBigImage: largeImageURL }); 
+  }
+
+  onClickBigImage = (evt) => {
+    if (evt.target === evt.currentTarget) {
+      this.setState({currentBigImage: ""});
+    }
+  }
+  
+  onKeyPress = (evt) => {
+ if (evt.code === 'Escape' && this.state.currentBigImage.length > 0) {
+      this.setState({currentBigImage: ""});
+    }
+}
+
+ componentDidMount() {
+        window.addEventListener('keydown', this.onKeyPress);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('keydown', this.onKeyPress);
+    }  
+  
+  
+
+ async componentDidUpdate(prevProps, prevState) {
+    if (prevState.request !== this.state.request ||
       prevState.page !== this.state.page) {
+      
+      try {
+        this.setState({ loading: true });
+        const newImages = await searchImg(this.state.request, this.state.page);
+        this.setState(prevState => ({
+          images: [...prevState.images, ...newImages.hits],
+        }))
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.setState({ loading: false });
+      }
       //HTTP REQUEST
     }
   }
   
-/*
-https://pixabay.com/api/?q=cat&page=1&key=your_key&image_type=photo&orientation=horizontal&per_page=12
-Your API key: 38422328-85a02d361c587760bb979b0d3;
-*/
-
 
   render() {
+    console.log(this.state.images);
     return (
-    
-      <div>React homework template
+      <div>
         <SearchBar onSubmit={this.handleSubmit}/>  
-        {this.state.images.length > 0 && <div>Gallery</div>}
-        <Button onClick={this.handleLoadMore}/>
+        <ImageGallery images={this.state.images} onClick={this.showImage} />
+        {this.state.loading && <Loader loader={this.state.loading} />}
+        {this.state.images.length > 0 && !this.state.loading && <Button onClick={this.handleLoadMore}/>}
+        {this.state.currentBigImage.length > 0 && <Modal largeImageURL={this.state.currentBigImage} onClickBigImage={this.onClickBigImage} onKeyPress={this.onKeyPress} />}
+        
     </div>
   );
 }
 };
 
-/*<Loader>{Audio}</Loader>*/
-
-/*<button onClick={this.handleLoadMore}>Load more</button>*/
 
 /*Scroll:
 const height = Math.max(

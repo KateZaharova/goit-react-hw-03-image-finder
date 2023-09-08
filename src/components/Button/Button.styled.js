@@ -7,6 +7,7 @@ flex-direction: column;
 
 export const ButtonLM = styled.button`
   margin-top:12px;
+  margin-bottom:12px;
   align-self: center;
   padding: 8px 16px;
   border-radius: 2px;
@@ -25,8 +26,8 @@ export const ButtonLM = styled.button`
   min-width: 180px;
   box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
     0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
-:hover,
-:focus {
+&:hover,
+&:focus {
   background-color: #303f9f;
 }
 `;
