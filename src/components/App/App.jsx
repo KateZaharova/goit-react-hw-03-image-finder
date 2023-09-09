@@ -15,7 +15,8 @@ export class App extends Component {
     loading: false,
     images: [],
     page: 1,
-    currentBigImage:'',
+    currentBigImage: '',
+    totalHits:0,
   };
 
   handleSubmit = evt => {
@@ -37,30 +38,25 @@ export class App extends Component {
 
   
   showImage = (largeImageURL) => {
+    window.addEventListener('keydown', this.onKeyPress);
     this.setState({ currentBigImage: largeImageURL }); 
   }
 
   onClickBigImage = (evt) => {
     if (evt.target === evt.currentTarget) {
+    window.removeEventListener('keydown', this.onKeyPress);  
       this.setState({currentBigImage: ""});
     }
   }
   
   onKeyPress = (evt) => {
- if (evt.code === 'Escape' && this.state.currentBigImage.length > 0) {
+    if (evt.code === 'Escape' && this.state.currentBigImage.length > 0) {
+    window.removeEventListener('keydown', this.onKeyPress);
       this.setState({currentBigImage: ""});
     }
 }
 
- componentDidMount() {
-        window.addEventListener('keydown', this.onKeyPress);
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('keydown', this.onKeyPress);
-    }  
-  
-  
+ 
 
  async componentDidUpdate(prevProps, prevState) {
     if (prevState.request !== this.state.request ||
@@ -71,6 +67,7 @@ export class App extends Component {
         const newImages = await searchImg(this.state.request, this.state.page);
         this.setState(prevState => ({
           images: [...prevState.images, ...newImages.hits],
+          totalHits: newImages.totalHits,
         }))
       } catch (error) {
         console.log(error);
@@ -89,7 +86,12 @@ export class App extends Component {
         <SearchBar onSubmit={this.handleSubmit}/>  
         <ImageGallery images={this.state.images} onClick={this.showImage} />
         {this.state.loading && <Loader loader={this.state.loading} />}
-        {this.state.images.length > 0 && !this.state.loading && <Button onClick={this.handleLoadMore}/>}
+        {(this.state.images.length > 0) &&
+          (this.state.images.length < this.state.totalHits) &&
+          (!this.state.loading) &&
+          <Button onClick={this.handleLoadMore} />
+        }
+        
         {this.state.currentBigImage.length > 0 && <Modal largeImageURL={this.state.currentBigImage} onClickBigImage={this.onClickBigImage} onKeyPress={this.onKeyPress} />}
         
     </div>
